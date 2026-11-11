@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: nexus-postgres
+    environment:
+      POSTGRES_DB: ordering_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ordering_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: nexus-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"    # AMQP protocol
+      - "15672:15672"  # Management dashboard
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: nexus-jaeger
+    ports:
+      - "16686:16686"  # Jaeger Web UI
+      - "4317:4317"    # OpenTelemetry gRPC receiver
+    restart: unless-stopped
+  
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: nexus-prometheus
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"    # UI & PromQL query engine
+    restart: unless-stopped
+
+  seq:
+    image: datalust/seq:latest
+    container_name: nexus-seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:80"      # Seq UI & HTTP ingestion
+    volumes:
+      - seq_data:/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

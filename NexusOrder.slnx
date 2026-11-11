@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Services/" />
+  <Folder Name="/src/Services/Ordering/">
+    <Project Path="src/Services/Ordering/NexusOrder.Ordering.API/NexusOrder.Ordering.API.csproj" />
+    <Project Path="src/Services/Ordering/NexusOrder.Ordering.Application/NexusOrder.Ordering.Application.csproj" />
+    <Project Path="src/Services/Ordering/NexusOrder.Ordering.Domain/NexusOrder.Ordering.Domain.csproj" />
+    <Project Path="src/Services/Ordering/NexusOrder.Ordering.Infrastructure/NexusOrder.Ordering.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/NexusOrder.Contracts/NexusOrder.Contracts.csproj" />
+  </Folder>
+</Solution>
